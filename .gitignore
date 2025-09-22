@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Build artifacts
+build/
+dist/
+*.spec
+
+# Kivy/Buildozer
+.buildozer/
+bin/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

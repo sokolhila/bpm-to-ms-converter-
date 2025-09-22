@@ -1,0 +1,37 @@
+name: Android APK (Kivy/Buildozer)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+    paths:
+      - '**.py'
+      - 'buildozer.spec'
+      - '.github/workflows/android-build.yml'
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache .buildozer
+        uses: actions/cache@v4
+        with:
+          path: .buildozer
+          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+
+      - name: Build debug APK with Buildozer (Docker)
+        run: |
+          docker run --rm \
+            -v "$PWD":/home/buildozer \
+            -w /home/buildozer \
+            kivy/buildozer \
+            buildozer -v android debug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bpm-converter-apk
+          path: bin/*.apk
