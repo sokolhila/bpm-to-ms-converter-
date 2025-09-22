@@ -16,10 +16,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build with Buildozer Action
-        uses: Arthelon/buildozer-action@v1
-        with:
-          command: android debug
+      - name: Docker diagnostics
+        run: |
+          docker --version
+          docker info || true
+
+      - name: Pull Buildozer image
+        run: docker pull kivy/buildozer:latest
+
+      - name: Build debug APK with Buildozer (Docker)
+        run: |
+          docker run --rm \
+            -v "$PWD":/home/buildozer \
+            -w /home/buildozer \
+            kivy/buildozer:latest \
+            buildozer -v android debug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
