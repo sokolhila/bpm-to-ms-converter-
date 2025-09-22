@@ -22,12 +22,21 @@ jobs:
           path: .buildozer
           key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
 
+      - name: Docker diagnostics
+        run: |
+          docker --version
+          docker info || true
+
+      - name: Pull Buildozer image
+        run: |
+          docker pull kivy/buildozer:latest
+
       - name: Build debug APK with Buildozer (Docker)
         run: |
           docker run --rm \
             -v "$PWD":/home/buildozer \
             -w /home/buildozer \
-            kivy/buildozer \
+            kivy/buildozer:latest \
             buildozer -v android debug
 
       - name: Upload APK artifact
